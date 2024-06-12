@@ -10,6 +10,9 @@ INITIAL_ENEMY_POSITION = [(260, -20), (260, 0), (260, 20)]
 
 TOP_BORDER = 280
 BOTTOM_BORDER = -280
+GO_UP = True
+GO_DOWN = False
+
 
 screen = Screen()
 screen.setup(width=600, height=600)
@@ -38,31 +41,15 @@ def detect_wall():
             distance+=20
 
 
-distance = enemy_paddle.body[0].ycor()
-
-def enemy_move(heading):
+def enemy_move():
     for square in enemy_paddle.body:
-        square.setheading(heading)
+        time.sleep(0.005)
         square.forward(20)
 
 
 def enemy_collision():
-    if enemy_paddle.tail.ycor() < BOTTOM_BORDER:
-        distance = BOTTOM_BORDER
-        for square in range(0, enemy_paddle.length):
-            enemy_paddle.body[square].sety(distance)
-            distance+=20
-  
-
-GO_UP = True
-GO_DOWN = False
-
-
-game_over = False
-while not game_over:
-    #enemy_move(90)
-    screen.update()
-    detect_wall()
+    global GO_UP
+    global GO_DOWN
 
     if GO_UP:
         for square in enemy_paddle.body:
@@ -79,11 +66,16 @@ while not game_over:
     if enemy_paddle.head.ycor() < BOTTOM_BORDER:
         GO_UP = True
         GO_DOWN = False
-        
-    for square in enemy_paddle.body:
-        time.sleep(0.005)
-        square.forward(20)
 
-    #enemy_collision()
+
+game_over = False
+while not game_over:
+    screen.update()
+    detect_wall()
+    enemy_collision()
+    enemy_move()
+        
+    
+
 
 screen.exitonclick()
